@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
@@ -11,7 +12,7 @@ import { CodeSnippet } from "@/components/CodeSnippet";
 import { formatDate, cn } from "@/lib/utils";
 import { Tag, Calendar, Database, ExternalLink } from "lucide-react";
 
-export default function DatasetsPage() {
+function DatasetsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -387,5 +388,24 @@ print(data)`}
         </main>
       </div>
     </div>
+  );
+}
+
+export default function DatasetsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen p-6 bg-white">
+        <div className="bg-white px-8">
+          <div className="mb-6">
+            <Breadcrumbs />
+          </div>
+          <div className="text-center py-12">
+            <p className="text-[var(--color-text-muted)]">Loading...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <DatasetsPageContent />
+    </Suspense>
   );
 }

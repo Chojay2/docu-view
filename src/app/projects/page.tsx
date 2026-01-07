@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
@@ -11,7 +12,7 @@ import { formatDate, cn } from "@/lib/utils";
 import { ExternalLink, Database, Users, Calendar, Tag } from "lucide-react";
 import Link from "next/link";
 
-export default function ProjectsPage() {
+function ProjectsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const page = parseInt(searchParams.get("page") || "1");
@@ -260,5 +261,24 @@ export default function ProjectsPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function ProjectsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen p-6 bg-white">
+        <div className="bg-white px-8">
+          <div className="mb-6">
+            <Breadcrumbs />
+          </div>
+          <div className="text-center py-12">
+            <p className="text-[var(--color-text-muted)]">Loading...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <ProjectsPageContent />
+    </Suspense>
   );
 }
